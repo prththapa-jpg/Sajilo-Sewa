@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sajilo Sewa - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --bg: #eef2ff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --danger: #ef4444;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.15);
+      --radius-xl: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #e0edff 0, #f9fafb 35%, #e5ecff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 460px;
+      padding: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 22px 22px 24px;
+    }
+
+    /* Brand header */
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.55);
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .main-title {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .main-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* Form */
+    .form-group {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .form-label span {
+      color: var(--danger);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 10px 14px 10px 38px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .input-field:focus {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+    }
+
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      left: 13px;
+      transform: translateY(-50%);
+      font-size: 15px;
+      opacity: 0.75;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .row-inline {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .row-inline a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .row-inline a:hover {
+      text-decoration: underline;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Buttons */
+    .primary-btn {
+      margin-top: 16px;
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 11px 0;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 16px 35px rgba(37, 99, 235, 0.55);
+    }
+
+    .primary-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.5);
+    }
+
+    .secondary-btn {
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 10px 0;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #ffffff;
+      color: var(--primary);
+    }
+
+    .secondary-btn:hover {
+      background: #f9fafb;
+    }
+
+    .bottom-note {
+      margin-top: 12px;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <!-- Logo + name -->
+      <div class="brand-row">
+        <div class="brand-logo">SS</div>
+        <div>
+          <div class="brand-title">Sajilo Sewa</div>
+          <div class="brand-subtitle">Ride easy, ride local</div>
+        </div>
+      </div>
+
+      <!-- Titles -->
+      <div class="main-title">Log in to your account</div>
+      <div class="main-subtitle">
+        Enter your mobile number and password to continue.
+      </div>
+
+      <!-- Login form -->
+      <form onsubmit="handleLogin(event)">
+        <!-- Mobile number -->
+        <div class="form-group">
+          <label class="form-label">Mobile Number <span>*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">📱</span>
+            <input
+              type="tel"
+              id="phone"
+              class="input-field"
+              placeholder="+977 9800000000"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label">Password <span>*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              class="input-field"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Remember + forgot -->
+        <div class="row-inline">
+          <label class="remember">
+            <input type="checkbox" id="remember" />
+            <span>Remember me</span>
+          </label>
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <!-- Log in button -->
+        <button type="submit" class="primary-btn">
+          Log In
+        </button>
+
+        <!-- Create account button (goes to your signup page) -->
+        <!-- Change href="register.html" if your signup file has another name -->
+        <button
+          type="button"
+          class="secondary-btn"
+          onclick="window.location.href='register.html'"
+        >
+          Create Account
+        </button>
+      </form>
+
+      <div class="bottom-note">
+        We use OTP verification during sign up to keep Sajilo Sewa safe for both passengers and riders.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleLogin(event) {
+  event.preventDefault();
+
+  const phoneInput = document.getElementById("phone").value.trim();
+  const passwordInput = document.getElementById("password").value;
+
+  // normalize phone to 10 digits (same as register)
+  const cleanedPhone = phoneInput.replace(/\D/g, "");
+
+  const savedPhone = localStorage.getItem("sajilo_phone");
+  const savedPassword = localStorage.getItem("sajilo_password");
+
+  if (!savedPhone || !savedPassword) {
+    alert("No account found. Please create an account first.");
+    return;
+  }
+
+  if (cleanedPhone === savedPhone && passwordInput === savedPassword) {
+    // login success
+    window.location.href = "home.html";
+  } else {
+    alert("Incorrect mobile number or password.");
+  }
+}
+
+  </script>
+</body>
+</html>

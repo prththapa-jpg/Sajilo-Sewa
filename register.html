@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sajilo Sewa - Create Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --bg: #eef2ff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --danger: #ef4444;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.16);
+      --radius-xl: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #e0edff 0, #f9fafb 35%, #e5ecff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 540px;
+      padding: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 20px 22px 22px;
+    }
+
+    /* Header */
+    .card-header {
+      margin-bottom: 14px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .login-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .login-hint a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-hint a:hover {
+      text-decoration: underline;
+    }
+
+    /* Form basics */
+    .form-group {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .form-label span {
+      color: var(--danger);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 10px 14px 10px 38px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .input-field:focus {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+    }
+
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      left: 13px;
+      transform: translateY(-50%);
+      font-size: 15px;
+      opacity: 0.7;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .two-cols {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    @media (min-width: 480px) {
+      .two-cols {
+        flex-direction: row;
+      }
+      .two-cols .form-group {
+        flex: 1;
+        margin-top: 0;
+      }
+    }
+
+    /* Toggle styles (used for role + gender) */
+    .role-toggle {
+      background: #f3f4f6;
+      border-radius: 999px;
+      padding: 3px;
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .role-chip {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
+      font-size: 12px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .role-chip.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Phone + OTP */
+    .phone-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    @media (min-width: 520px) {
+      .phone-row {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    .phone-main {
+      flex: 1;
+    }
+
+    .otp-btn {
+      margin-top: 4px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--primary-soft);
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .otp-btn.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .otp-section {
+      margin-top: 8px;
+      display: none;
+    }
+
+    .otp-label {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .otp-inputs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .otp-inputs input {
+      width: 38px;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .otp-inputs input:focus {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+    }
+
+    .otp-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .otp-resend {
+      border: none;
+      background: transparent;
+      color: var(--primary);
+      font-size: 11px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .otp-resend.disabled {
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* Checkbox and button */
+    .checkbox-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .checkbox-row input {
+      margin-top: 2px;
+    }
+
+    .checkbox-row a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .checkbox-row a:hover {
+      text-decoration: underline;
+    }
+
+    .primary-btn {
+      margin-top: 16px;
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 11px 0;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 16px 35px rgba(37, 99, 235, 0.5);
+    }
+
+    .primary-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.45);
+    }
+
+    .primary-btn.disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .small-note {
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Rider extra section */
+    #riderDocsSection {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: #f9fafb;
+      border: 1px dashed #cbd5e1;
+      display: none;
+    }
+
+    #riderDocsSectionTitle {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #1f2937;
+    }
+
+    .file-input {
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="card">
+      <!-- HEADER -->
+      <div class="card-header">
+        <div class="title">Create your Sajilo account</div>
+        <div class="subtitle">Sign up to book rides or earn by riding.</div>
+        <div class="login-hint">
+          Already have an account?
+          <a href="login.html">Log in</a>
+        </div>
+      </div>
+
+      <form onsubmit="handleRegister(event)">
+        <!-- FULL NAME -->
+        <div class="form-group">
+          <label class="form-label">Full Name <span>*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="fullName"
+              class="input-field"
+              placeholder="E.g., Parth Thapa"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- MOBILE + EMAIL -->
+        <div class="two-cols">
+          <!-- PHONE -->
+          <div class="form-group">
+            <label class="form-label">Mobile Number <span>*</span></label>
+            <div class="phone-row">
+              <div class="phone-main">
+                <div class="input-wrapper">
+                  <span class="input-icon">📱</span>
+                  <input
+                    type="tel"
+                    id="phone"
+                    class="input-field"
+                    placeholder="9800000000"
+                    required
+                  />
+                </div>
+                <div class="field-hint">
+                  For verification, we will send a one-time password (OTP) to this mobile number.
+                </div>
+              </div>
+              <button type="button" class="otp-btn" id="sendOtpBtn" onclick="sendOtp()">
+                Send OTP
+              </button>
+            </div>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="form-group">
+            <label class="form-label">Email (optional)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                type="email"
+                id="email"
+                class="input-field"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- OTP SECTION (hidden until Send OTP) -->
+        <div class="otp-section" id="otpSection">
+          <div class="otp-label">Enter OTP</div>
+          <div class="otp-inputs">
+            <input type="text" maxlength="1" inputmode="numeric" id="otp1" />
+            <input type="text" maxlength="1" inputmode="numeric" id="otp2" />
+            <input type="text" maxlength="1" inputmode="numeric" id="otp3" />
+            <input type="text" maxlength="1" inputmode="numeric" id="otp4" />
+          </div>
+          <div class="otp-info">
+            <span id="otpHint">OTP sent to your mobile.</span>
+            <button
+              type="button"
+              class="otp-resend disabled"
+              id="resendBtn"
+              onclick="resendOtp()"
+              disabled
+            >
+              Resend OTP
+            </button>
+          </div>
+        </div>
+
+        <!-- DATE OF BIRTH -->
+        <div class="form-group">
+          <label class="form-label">Date of Birth <span>*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">📅</span>
+            <input
+              type="date"
+              id="dob"
+              class="input-field"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- GENDER -->
+        <div class="form-group">
+          <label class="form-label">Gender <span>*</span></label>
+          <div class="role-toggle">
+            <button
+              type="button"
+              class="role-chip active"
+              id="genderMale"
+              onclick="setGender('Male')"
+            >
+              Male
+            </button>
+            <button
+              type="button"
+              class="role-chip"
+              id="genderFemale"
+              onclick="setGender('Female')"
+            >
+              Female
+            </button>
+            <button
+              type="button"
+              class="role-chip"
+              id="genderOther"
+              onclick="setGender('Other')"
+            >
+              Other
+            </button>
+          </div>
+          <input type="hidden" id="gender" value="Male" />
+        </div>
+
+        <!-- SIGN UP AS -->
+        <div class="form-group">
+          <label class="form-label">Sign up as <span>*</span></label>
+          <div class="role-toggle">
+            <button
+              type="button"
+              class="role-chip active"
+              id="rolePassenger"
+              onclick="setRole('passenger')"
+            >
+              Passenger
+            </button>
+            <button
+              type="button"
+              class="role-chip"
+              id="roleRider"
+              onclick="setRole('rider')"
+            >
+              Rider
+            </button>
+          </div>
+          <input type="hidden" id="role" value="passenger" />
+        </div>
+
+        <!-- RIDER EXTRA DOCUMENTS -->
+        <div id="riderDocsSection">
+          <div id="riderDocsSectionTitle">
+            Rider verification (required for Rider mode)
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">License Number <span>*</span></label>
+            <div class="input-wrapper">
+              <span class="input-icon">🪪</span>
+              <input
+                type="text"
+                id="licenseNumber"
+                class="input-field"
+                placeholder="Driving license number"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Bike Number <span>*</span></label>
+            <div class="input-wrapper">
+              <span class="input-icon">🏍️</span>
+              <input
+                type="text"
+                id="bikeNumber"
+                class="input-field"
+                placeholder="E.g., BA 12 PA 3456"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Bike Photo <span>*</span></label>
+            <input
+              type="file"
+              id="bikePhoto"
+              accept="image/*"
+              class="file-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">License Photo (clear) <span>*</span></label>
+            <input
+              type="file"
+              id="licensePhoto"
+              accept="image/*"
+              class="file-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Bluebook Photo <span>*</span></label>
+            <input
+              type="file"
+              id="bluebookPhoto"
+              accept="image/*"
+              class="file-input"
+            />
+          </div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <label class="form-label">Password <span>*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              class="input-field"
+              placeholder="Create a strong password"
+              required
+              minlength="6"
+            />
+          </div>
+          <div class="field-hint">At least 6 characters.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm Password <span>*</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">✅</span>
+            <input
+              type="password"
+              id="confirmPassword"
+              class="input-field"
+              placeholder="Re-enter your password"
+              required
+              minlength="6"
+            />
+          </div>
+        </div>
+
+        <!-- TERMS -->
+        <div class="checkbox-row">
+          <input type="checkbox" id="terms" required />
+          <label for="terms">
+            I agree to the
+            <a href="#">Terms of Service</a>
+            and
+            <a href="#">Privacy Policy</a>
+            of Sajilo Sewa.
+          </label>
+        </div>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="primary-btn" id="createBtn">
+          Create Account
+        </button>
+
+        <div class="small-note">
+          We use OTP verification and document checks to keep Sajilo Sewa safe for both passengers and riders.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentRole = "passenger";
+    let otpTimer = null;
+    let remaining = 30;
+
+    function getAgeFromDob(dobStr) {
+      if (!dobStr) return null;
+      const dob = new Date(dobStr);
+      if (isNaN(dob)) return null;
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
+    function setRole(role) {
+      const dobValue = document.getElementById("dob").value;
+      const age = getAgeFromDob(dobValue);
+
+      if (role === "rider") {
+        if (!dobValue) {
+          alert("Please enter your Date of Birth before selecting Rider.");
+          return;
+        }
+        if (age !== null && age < 18) {
+          alert("Rider role can only be used if you are 18 years or older.");
+          updateRoleUI("passenger");
+          return;
+        }
+      }
+
+      currentRole = role;
+      document.getElementById("role").value = role;
+      updateRoleUI(role);
+    }
+
+    function updateRoleUI(role) {
+      const passengerBtn = document.getElementById("rolePassenger");
+      const riderBtn = document.getElementById("roleRider");
+      const riderDocs = document.getElementById("riderDocsSection");
+
+      if (role === "passenger") {
+        passengerBtn.classList.add("active");
+        riderBtn.classList.remove("active");
+        if (riderDocs) riderDocs.style.display = "none";
+      } else {
+        riderBtn.classList.add("active");
+        passengerBtn.classList.remove("active");
+        if (riderDocs) riderDocs.style.display = "block";
+      }
+    }
+
+    function setGender(g) {
+      document.getElementById("gender").value = g;
+
+      const male = document.getElementById("genderMale");
+      const female = document.getElementById("genderFemale");
+      const other = document.getElementById("genderOther");
+
+      male.classList.remove("active");
+      female.classList.remove("active");
+      other.classList.remove("active");
+
+      if (g === "Male") male.classList.add("active");
+      if (g === "Female") female.classList.add("active");
+      if (g === "Other") other.classList.add("active");
+    }
+
+    // Only send OTP if mobile number is exactly 10 digits
+    function sendOtp() {
+      const phoneRaw = document.getElementById("phone").value.trim();
+      if (!phoneRaw) {
+        alert("Please enter your mobile number first.");
+        return;
+      }
+
+      const cleanedPhone = phoneRaw.replace(/\D/g, ""); // remove non-digits
+
+      if (cleanedPhone.length !== 10) {
+        alert("Invalid mobile number. Please enter a 10-digit number.");
+        return; // do NOT show OTP section, do NOT start timer
+      }
+
+      alert("OTP has been sent to " + cleanedPhone);
+
+      document.getElementById("otpSection").style.display = "block";
+      document.getElementById("otp1").focus();
+
+      const sendBtn = document.getElementById("sendOtpBtn");
+      sendBtn.classList.add("disabled");
+      sendBtn.disabled = true;
+
+      const resendBtn = document.getElementById("resendBtn");
+      resendBtn.classList.add("disabled");
+      resendBtn.disabled = true;
+      remaining = 30;
+      document.getElementById("otpHint").textContent =
+        "OTP sent. You can request a new code after 30 seconds.";
+
+      if (otpTimer) clearInterval(otpTimer);
+      otpTimer = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(otpTimer);
+          resendBtn.classList.remove("disabled");
+          resendBtn.disabled = false;
+          document.getElementById("otpHint").textContent =
+            "If you didn’t receive it, you can request a new OTP.";
+        }
+      }, 1000);
+    }
+
+    function resendOtp() {
+      const phoneRaw = document.getElementById("phone").value.trim();
+      const cleanedPhone = phoneRaw.replace(/\D/g, "");
+      if (!cleanedPhone || cleanedPhone.length !== 10) {
+        alert("Invalid mobile number. Please enter a 10-digit number.");
+        return;
+      }
+      alert("A new OTP has been sent to " + cleanedPhone);
+      sendOtp(); // reuse logic (it will re-validate)
+    }
+
+    // OTP auto-move
+    ["otp1", "otp2", "otp3", "otp4"].forEach((id, idx, arr) => {
+      const input = document.getElementById(id);
+      input.addEventListener("input", (e) => {
+        const v = e.target.value.replace(/\D/g, "");
+        e.target.value = v;
+        if (v && idx < arr.length - 1) {
+          document.getElementById(arr[idx + 1]).focus();
+        }
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !e.target.value && idx > 0) {
+          document.getElementById(arr[idx - 1]).focus();
+        }
+      });
+    });
+
+    function handleRegister(e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const phoneRaw = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const role = document.getElementById("role").value;
+      const gender = document.getElementById("gender").value;
+      const dob = document.getElementById("dob").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      const licenseNumber = document.getElementById("licenseNumber")?.value.trim() || "";
+      const bikeNumber = document.getElementById("bikeNumber")?.value.trim() || "";
+      const bikePhoto = document.getElementById("bikePhoto")?.files || [];
+      const licensePhoto = document.getElementById("licensePhoto")?.files || [];
+      const bluebookPhoto = document.getElementById("bluebookPhoto")?.files || [];
+
+      const otpCode =
+        (document.getElementById("otp1").value || "") +
+        (document.getElementById("otp2").value || "") +
+        (document.getElementById("otp3").value || "") +
+        (document.getElementById("otp4").value || "");
+
+      // Mobile must be exactly 10 digits
+      const cleanedPhone = phoneRaw.replace(/\D/g, "");
+      if (cleanedPhone.length !== 10) {
+        alert("Mobile number must be exactly 10 digits.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      if (!dob) {
+        alert("Please select your Date of Birth.");
+        return;
+      }
+
+      const age = getAgeFromDob(dob);
+      if (age === null || age < 0) {
+        alert("Please enter a valid Date of Birth.");
+        return;
+      }
+
+      if (role === "rider" && age < 18) {
+        alert("Rider role can only be used if you are 18 years or older.");
+        updateRoleUI("passenger");
+        document.getElementById("role").value = "passenger";
+        return;
+      }
+
+      // Extra checks for Rider mode
+      if (role === "rider") {
+        if (!licenseNumber) {
+          alert("Please enter your License Number.");
+          return;
+        }
+        if (!bikeNumber) {
+          alert("Please enter your Bike Number.");
+          return;
+        }
+        if (!bikePhoto.length) {
+          alert("Please upload a clear photo of your bike.");
+          return;
+        }
+        if (!licensePhoto.length) {
+          alert("Please upload a clear photo of your license.");
+          return;
+        }
+        if (!bluebookPhoto.length) {
+          alert("Please upload a photo of your bike bluebook.");
+          return;
+        }
+      }
+
+      if (!otpCode || otpCode.length < 4) {
+        alert("Please enter the OTP that was sent to your mobile number.");
+        return;
+      }
+
+      // Save for login + home page (docs are not stored in localStorage; that's backend work)
+      localStorage.setItem("sajilo_name", fullName);
+      localStorage.setItem("sajilo_phone", cleanedPhone);
+      localStorage.setItem("sajilo_role", role);
+      localStorage.setItem("sajilo_gender", gender);
+      localStorage.setItem("sajilo_age", age.toString());
+      localStorage.setItem("sajilo_password", password);
+
+      window.location.href = "home.html";
+    }
+  </script>
+</body>
+</html>
