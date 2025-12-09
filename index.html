@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sajilo Sewa Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Leaflet (Map) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <!-- Your app styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app-root">
+    <!-- LOGIN SCREEN -->
+    <div id="screen-login" class="screen">
+      <div class="card">
+        <div class="brand-row">
+          <div class="brand-logo"><span class="brand-logo-text">SS</span></div>
+          <div>
+            <div class="brand-title">Sajilo Sewa</div>
+            <div class="brand-subtitle">Ride easy, ride local</div>
+          </div>
+        </div>
+
+        <div class="main-title">Log in to your account</div>
+        <div class="main-subtitle">
+          Enter your mobile number and password to continue.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Mobile Number <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">📱</span>
+            <input
+              id="login-phone"
+              class="input-field"
+              type="tel"
+              placeholder="+977 9800000000"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Password <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              id="login-password"
+              class="input-field"
+              type="password"
+              placeholder="Enter your password"
+            />
+          </div>
+        </div>
+
+        <div class="row-inline">
+          <span>Remember me</span>
+          <span class="link-text" onclick="alert('Demo only')"
+            >Forgot password?</span
+          >
+        </div>
+
+        <button class="primary-btn" onclick="handleLogin()">Log In</button>
+        <button class="secondary-btn" onclick="showRegister()">
+          Create Account
+        </button>
+
+        <div class="bottom-note">
+          We use OTP verification during sign up to keep Sajilo Sewa safe. (Demo)
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER SCREEN -->
+    <div id="screen-register" class="screen hidden">
+      <div class="card">
+        <div class="back-row">
+          <button class="back-btn" onclick="showLogin">
+            <span class="back-icon">←</span>
+            <span class="back-text">Back</span>
+          </button>
+        </div>
+
+        <div class="main-title">Create your Sajilo account</div>
+        <div class="main-subtitle">
+          Sign up to book rides or earn by riding.
+        </div>
+        <div class="subtitle-row">
+          Already have an account?
+          <span class="link-text" onclick="showLogin()">Log in</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Full Name <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input
+              id="reg-fullname"
+              class="input-field"
+              placeholder="E.g., Parth Thapa"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Mobile Number <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">📱</span>
+            <input
+              id="reg-phone"
+              class="input-field"
+              type="tel"
+              placeholder="9800000000"
+            />
+          </div>
+          <div class="field-hint">
+            We’ll send an OTP to verify your number.
+          </div>
+          <button class="otp-btn" onclick="handleSendOtp()">Send OTP</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email (optional)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input
+              id="reg-email"
+              class="input-field"
+              type="email"
+              placeholder="you@example.com"
+            />
+          </div>
+        </div>
+
+        <div id="otp-section" class="form-group hidden">
+          <label class="form-label">Enter OTP</label>
+          <div class="otp-row">
+            <input id="otp-1" class="otp-input" maxlength="1" />
+            <input id="otp-2" class="otp-input" maxlength="1" />
+            <input id="otp-3" class="otp-input" maxlength="1" />
+            <input id="otp-4" class="otp-input" maxlength="1" />
+          </div>
+          <div class="field-hint">Demo only – no real SMS sent.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Date of Birth <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">📅</span>
+            <input
+              id="reg-dob"
+              class="input-field"
+              type="date"
+              max="2100-01-01"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Gender <span class="required">*</span>
+          </label>
+          <div class="toggle-row">
+            <div class="chip active" data-gender="Male" onclick="setGender('Male', this)">
+              Male
+            </div>
+            <div class="chip" data-gender="Female" onclick="setGender('Female', this)">
+              Female
+            </div>
+            <div class="chip" data-gender="Other" onclick="setGender('Other', this)">
+              Other
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Sign up as <span class="required">*</span>
+          </label>
+          <div class="toggle-row">
+            <div class="chip active" data-role="passenger" onclick="setRole('passenger', this)">
+              Passenger
+            </div>
+            <div class="chip" data-role="rider" onclick="setRole('rider', this)">
+              Rider
+            </div>
+          </div>
+        </div>
+
+        <div id="rider-extra" class="form-group hidden">
+          <div
+            style="
+              margin-top: 8px;
+              padding: 10px;
+              border-radius: 16px;
+              background: #f9fafb;
+              border: 1px solid #cbd5e1;
+            "
+          >
+            <div
+              style="
+                font-size: 12px;
+                font-weight: 600;
+                margin-bottom: 4px;
+              "
+            >
+              Rider verification (for Rider mode)
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                License Number <span class="required">*</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">🪪</span>
+                <input
+                  id="reg-license"
+                  class="input-field"
+                  placeholder="License number"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                Bike Number <span class="required">*</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">🏍️</span>
+                <input
+                  id="reg-bike"
+                  class="input-field"
+                  placeholder="E.g., BA 12 PA 3456"
+                />
+              </div>
+            </div>
+
+            <div class="field-hint">
+              Real app would also require photo of bike, bluebook, etc.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Password <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              id="reg-password"
+              class="input-field"
+              type="password"
+              placeholder="Create a strong password"
+            />
+          </div>
+          <div class="field-hint">At least 6 characters.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Confirm Password <span class="required">*</span>
+          </label>
+          <div class="input-wrapper">
+            <span class="input-icon">✅</span>
+            <input
+              id="reg-confirm"
+              class="input-field"
+              type="password"
+              placeholder="Re-enter password"
+            />
+          </div>
+        </div>
+
+        <div class="checkbox-row" onclick="toggleTerms()">
+          <div id="terms-box" class="checkbox-box"></div>
+          <div>
+            I agree to the
+            <span class="link-text">Terms of Service</span> and
+            <span class="link-text">Privacy Policy</span>.
+          </div>
+        </div>
+
+        <button class="primary-btn" onclick="handleRegister()">
+          Create Account
+        </button>
+
+        <div class="bottom-note">
+          We use OTP verification and document checks to keep Sajilo Sewa safe.
+          (Demo)
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKING SCREEN -->
+    <div id="screen-booking" class="hidden" style="width: 100%">
+      <div class="top-bar">
+        <div class="brand-row" style="margin-bottom: 0">
+          <div class="brand-logo">
+            <span class="brand-logo-text">SS</span>
+          </div>
+        </div>
+        <div class="user-chip">
+          <div class="user-avatar" id="booking-avatar">U</div>
+          <div
+            id="booking-username"
+            style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+          >
+            User
+          </div>
+        </div>
+        <button class="logout-chip" onclick="logout()">Log out</button>
+      </div>
+
+      <div class="map-wrapper">
+        <div id="booking-map" class="map"></div>
+
+        <div class="map-overlay">
+          <div class="card" style="padding: 10px; border-radius: 18px">
+            <div class="form-group" style="margin-top: 4px">
+              <label class="form-label">Pickup location</label>
+              <div class="input-wrapper" style="height: 40px">
+                <span class="input-icon">📍</span>
+                <select id="pickup-select" class="input-field">
+                  <option value="">Select pickup</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 8px">
+              <label class="form-label">Destination</label>
+              <div class="input-wrapper" style="height: 40px">
+                <span class="input-icon">📍</span>
+                <select id="dest-select" class="input-field">
+                  <option value="">Select destination</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-bottom-sheet">
+          <div id="route-summary" class="map-info">
+            Pickup: <span id="summary-pickup">Not set</span><br />
+            Destination: <span id="summary-dest">Not set</span><br />
+            Distance:
+            <span id="summary-distance">—</span>
+          </div>
+          <div id="summary-fare" class="fare-big"></div>
+
+          <div style="display: flex; gap: 6px; margin-top: 6px">
+            <button
+              class="secondary-btn"
+              style="margin-top: 0; flex: 1"
+              onclick="resetBooking()"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div class="form-group" style="margin-top: 8px">
+            <label class="form-label">Choose vehicle</label>
+            <div class="toggle-row">
+              <div
+                class="chip active"
+                data-vtype="bike"
+                onclick="setVehicleType('bike', this)"
+              >
+                Bike
+              </div>
+              <div
+                class="chip"
+                data-vtype="taxi"
+                onclick="setVehicleType('taxi', this)"
+              >
+                Taxi
+              </div>
+            </div>
+          </div>
+
+          <div id="driver-box" class="driver-box hidden">
+            <div class="driver-title">Available drivers</div>
+            <div id="driver-list"></div>
+          </div>
+
+          <button
+            id="search-driver-btn"
+            class="primary-btn mt-10"
+            onclick="searchDrivers()"
+          >
+            Search for driver
+          </button>
+
+          <button
+            id="confirm-ride-btn"
+            class="primary-btn mt-8 hidden"
+            onclick="confirmRide()"
+          >
+            Confirm ride
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIDE STATUS SCREEN -->
+    <div id="screen-ride-status" class="hidden" style="width: 100%">
+      <div class="top-bar">
+        <div class="brand-row" style="margin-bottom: 0">
+          <div class="brand-logo">
+            <span class="brand-logo-text">SS</span>
+          </div>
+        </div>
+        <div class="user-chip">
+          <div class="user-avatar" id="status-avatar">U</div>
+          <div
+            id="status-username"
+            style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+          >
+            User
+          </div>
+        </div>
+        <button class="logout-chip" onclick="logout()">Log out</button>
+      </div>
+
+      <div class="map-wrapper">
+        <div id="status-map" class="map"></div>
+        <div class="status-panel">
+          <div id="status-title" class="status-title">
+            Driver on the way
+          </div>
+          <div id="status-text" class="status-text">
+            Driver will arrive soon
+          </div>
+          <div id="status-route" class="status-route"></div>
+          <div id="status-distance" class="status-distance"></div>
+          <div id="status-fare" class="status-fare-big"></div>
+
+          <button
+            id="status-primary-btn"
+            class="primary-btn mt-10"
+            onclick="statusPrimaryAction()"
+          >
+            Driver has arrived (demo)
+          </button>
+
+          <div class="text-center mt-8">
+            <button
+              id="status-cancel-btn"
+              class="secondary-btn"
+              style="
+                margin-top: 0;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                color: var(--muted);
+              "
+              onclick="cancelRide()"
+            >
+              Cancel ride
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RATING SCREEN -->
+    <div id="screen-rating" class="hidden" style="width: 100%">
+      <div class="top-bar">
+        <div class="brand-row" style="margin-bottom: 0">
+          <div class="brand-logo">
+            <span class="brand-logo-text">SS</span>
+          </div>
+        </div>
+        <div class="user-chip">
+          <div class="user-avatar" id="rating-avatar">U</div>
+          <div
+            id="rating-username"
+            style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+          >
+            User
+          </div>
+        </div>
+        <button class="logout-chip" onclick="logout()">Log out</button>
+      </div>
+
+      <div class="map-wrapper">
+        <div id="rating-map" class="map"></div>
+        <div class="rating-panel">
+          <div id="rating-title" class="rating-title">Rate your driver</div>
+          <div id="rating-driver" class="rating-driver"></div>
+          <div id="rating-trip" class="rating-trip"></div>
+
+          <div class="stars-row">
+            <span class="star" data-star="1" onclick="setRating(1)">★</span>
+            <span class="star" data-star="2" onclick="setRating(2)">★</span>
+            <span class="star" data-star="3" onclick="setRating(3)">★</span>
+            <span class="star" data-star="4" onclick="setRating(4)">★</span>
+            <span class="star" data-star="5" onclick="setRating(5)">★</span>
+          </div>
+
+          <div class="form-group" style="margin-top: 8px">
+            <div
+              class="input-wrapper"
+              style="height: auto; border-radius: 16px"
+            >
+              <textarea
+                id="rating-comment"
+                placeholder="Add a comment (optional)"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <button class="primary-btn mt-10" onclick="submitRating()">
+            Submit rating &amp; finish
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Firebase JS SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- Your app logic -->
+  <script src="app.js"></script>
+
+  <!-- Firebase integration layer (Realtime + Firestore) -->
+  <script>
+    // Your Firebase config
+    var firebaseConfig = {
+      apiKey: "AIzaSyDbw3XpNV7agF4upKg_jDoT_mBXXqAjl-k",
+      authDomain: "sajilo-sewa-b9e77.firebaseapp.com",
+      projectId: "sajilo-sewa-b9e77",
+      storageBucket: "sajilo-sewa-b9e77.firebasestorage.app",
+      messagingSenderId: "205223320072",
+      appId: "1:205223320072:web:0229f388eea669a6590fbd",
+      measurementId: "G-77ZL58X06C",
+      databaseURL: "https://sajilo-sewa-b9e77-default-rtdb.firebaseio.com"
+    };
+
+    // Initialize Firebase only once
+    if (!firebase.apps || !firebase.apps.length || !firebase.apps[0]) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    var rtdb = firebase.database();
+    var firestore = firebase.firestore();
+
+    function getActiveChipValue(attrName) {
+      var chips = document.querySelectorAll('.chip[' + attrName + ']');
+      for (var i = 0; i < chips.length; i++) {
+        if (chips[i].classList.contains('active')) {
+          return chips[i].getAttribute(attrName);
+        }
+      }
+      return null;
+    }
+
+    function getSelectedRating() {
+      var stars = document.querySelectorAll('.star');
+      var rating = null;
+      stars.forEach(function(star) {
+        if (star.classList.contains('active') || star.classList.contains('selected')) {
+          var v = parseInt(star.getAttribute('data-star'), 10);
+          if (!isNaN(v)) rating = v;
+        }
+      });
+      return rating;
+    }
+
+    (function wrapHandlers() {
+      // LOGIN
+      var originalHandleLogin = window.handleLogin || function() {};
+      window.handleLogin = function() {
+        try {
+          originalHandleLogin();
+        } catch (e) {
+          console.error("original handleLogin error:", e);
+        }
+
+        var phone = (document.getElementById("login-phone") || {}).value || "";
+        var password = (document.getElementById("login-password") || {}).value || "";
+
+        if (!phone.trim() || !password.trim()) return;
+
+        var loginData = {
+          phone: phone,
+          password: password,
+          time: Date.now()
+        };
+
+        rtdb.ref("logins").push(loginData)
+          .then(function() { console.log("Login saved to Realtime DB"); })
+          .catch(function(err) { console.error("RTDB login error:", err); });
+
+        firestore.collection("logins").add(loginData)
+          .then(function() { console.log("Login saved to Firestore"); })
+          .catch(function(err) { console.error("Firestore login error:", err); });
+      };
+
+      // REGISTER
+      var originalHandleRegister = window.handleRegister || function() {};
+      window.handleRegister = function() {
+        try {
+          originalHandleRegister();
+        } catch (e) {
+          console.error("original handleRegister error:", e);
+        }
+
+        var fullName = (document.getElementById("reg-fullname") || {}).value || "";
+        var phone = (document.getElementById("reg-phone") || {}).value || "";
+        var email = (document.getElementById("reg-email") || {}).value || "";
+        var dob = (document.getElementById("reg-dob") || {}).value || "";
+        var licenseNo = (document.getElementById("reg-license") || {}).value || "";
+        var bikeNo = (document.getElementById("reg-bike") || {}).value || "";
+        var password = (document.getElementById("reg-password") || {}).value || "";
+        var confirm = (document.getElementById("reg-confirm") || {}).value || "";
+
+        var gender = getActiveChipValue("data-gender");
+        var role = getActiveChipValue("data-role");
+
+        var termsChecked = document.getElementById("terms-box") &&
+          document.getElementById("terms-box").classList.contains("checked");
+
+        if (!fullName.trim() || !phone.trim()) {
+          return;
+        }
+
+        var regData = {
+          name: fullName,
+          phone: phone,
+          email: email,
+          dob: dob,
+          gender: gender,
+          role: role,
+          license: licenseNo,
+          bike: bikeNo,
+          password: password,
+          confirmPassword: confirm,
+          termsAccepted: !!termsChecked,
+          createdAt: Date.now()
+        };
+
+        rtdb.ref("users").push(regData)
+          .then(function() { console.log("User saved to Realtime DB"); })
+          .catch(function(err) { console.error("RTDB user error:", err); });
+
+        firestore.collection("users").add(regData)
+          .then(function() { console.log("User saved to Firestore"); })
+          .catch(function(err) { console.error("Firestore user error:", err); });
+      };
+
+      // SEARCH DRIVERS (booking)
+      var originalSearchDrivers = window.searchDrivers || function() {};
+      window.searchDrivers = function() {
+        try {
+          originalSearchDrivers();
+        } catch (e) {
+          console.error("original searchDrivers error:", e);
+        }
+
+        var pickup = (document.getElementById("pickup-select") || {}).value || "";
+        var dest = (document.getElementById("dest-select") || {}).value || "";
+        var vehicleType = getActiveChipValue("data-vtype");
+
+        var data = {
+          pickup: pickup,
+          destination: dest,
+          vehicleType: vehicleType,
+          time: Date.now()
+        };
+
+        rtdb.ref("searchRequests").push(data);
+        firestore.collection("searchRequests").add(data);
+      };
+
+      // CONFIRM RIDE
+      var originalConfirmRide = window.confirmRide || function() {};
+      window.confirmRide = function() {
+        try {
+          originalConfirmRide();
+        } catch (e) {
+          console.error("original confirmRide error:", e);
+        }
+
+        var pickup = (document.getElementById("summary-pickup") || {}).innerText || "";
+        var dest = (document.getElementById("summary-dest") || {}).innerText || "";
+        var distance = (document.getElementById("summary-distance") || {}).innerText || "";
+        var fare = (document.getElementById("summary-fare") || {}).innerText || "";
+        var vehicleType = getActiveChipValue("data-vtype");
+
+        var data = {
+          pickup: pickup,
+          destination: dest,
+          distance: distance,
+          fare: fare,
+          vehicleType: vehicleType,
+          confirmedAt: Date.now()
+        };
+
+        rtdb.ref("rides").push(data);
+        firestore.collection("rides").add(data);
+      };
+
+      // SUBMIT RATING
+      var originalSubmitRating = window.submitRating || function() {};
+      window.submitRating = function() {
+        try {
+          originalSubmitRating();
+        } catch (e) {
+          console.error("original submitRating error:", e);
+        }
+
+        var rating = getSelectedRating();
+        var comment = (document.getElementById("rating-comment") || {}).value || "";
+        var driver = (document.getElementById("rating-driver") || {}).innerText || "";
+        var trip = (document.getElementById("rating-trip") || {}).innerText || "";
+
+        var data = {
+          rating: rating,
+          comment: comment,
+          driverInfo: driver,
+          tripInfo: trip,
+          time: Date.now()
+        };
+
+        rtdb.ref("ratings").push(data);
+        firestore.collection("ratings").add(data);
+      };
+    })();
+  </script>
+</body>
+</html>
